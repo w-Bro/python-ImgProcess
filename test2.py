@@ -36,6 +36,8 @@ if __name__ == '__main__':
     # 对图片取反
     reversed_white_img = 255 - white_img
     cv2.imshow('reversed_white_img', reversed_white_img)
+    
+    
     # 接收指定的键盘敲击再关闭窗口 -- ESC
     if cv2.waitKey(0) == 27:
         # 销毁全部窗口
