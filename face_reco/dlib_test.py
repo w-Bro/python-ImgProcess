@@ -194,6 +194,7 @@ def face_contrast(image_path_1, image_path_2):
                   (0, 0, 255), 1)
     cv2.imshow('image_2', image_2)
     cv2.waitKey(0)
+    cv2.destroyAllWindows()
     
     # 提取68个特征点
     shape = shape_predictor(image_1, face_1)
@@ -213,12 +214,32 @@ def face_contrast(image_path_1, image_path_2):
     distance = np.sqrt(sum)
     print(f"distance: {distance}")
     # 推荐0.6阈值 适用于成人
-    if distance < 0.5:
+    if distance < 0.6:
         print('是同一个人')
     else:
         print('不是同一个人')
         
         
+# 训练模型
+def model_training(imgs_path, xml_name):
+    # 训练参数
+    options = dlib.simple_object_detector_training_options()
+    options.add_left_right_image_flips = True
+    # 支持向量机的C参数，通常默认取为5.自己适当更改参数以达到最好的效果
+    options.C = 5
+    # 线程数，根据CPU核心数填写
+    options.num_threads = 1
+    options.be_verbose = True
+    
+    import time
+    start_time = time.time()
+    print(' -- 开始训练 -- ')
+    dlib.train_simple_object_detector(imgs_path + xml_name, 'detector.svm', options)
+    # print("训练精准度: {}".format(
+    #     dlib.test_simple_object_detector(imgs_path + xml_name, "detector.svm")))
+    print(f'--训练完成-- 耗时:{time.time() - start_time}s')
+
+
 if __name__ == '__main__':
     image_path_1_1 = './image_test/76020190518171824_800008166198661.jpg'
     image_path_1_2 = './image_test/1558171552454_760.jpg'
@@ -227,10 +248,18 @@ if __name__ == '__main__':
     image_path_4 = './image_test/group.jpg'
     image_path_5_1 = './image_test/ym_1.jpg'
     image_path_5_2 = './image_test/ym_2.jpg'
-    
+    image_path_6_1 = './image_test/1_1.jpg'
+    image_path_6_2 = './image_test/1_2.jpg'
+    image_path_7_1 = './image_test/2_1.jpg'
+    image_path_7_2 = './image_test/2_2.jpg'
+    image_path_8_1 = './image_test/3_1.jpg'
+    image_path_8_2 = './image_test/3_2.jpg'
+    image_path_9_1 = './image_test/4_1.jpg'
+    image_path_9_2 = './image_test/4_2.jpg'
     # face_detector(image_path_1_1)
-    # face_detector(image_path_1_2)
-    # shape_predictor(image_path_4)
-    # face_detector_cnn(image_path_4)
+    # face_detector(image_path_9_2)
+    # shape_predictor('test.jpg')
+    # face_detector('test.jpg')
     # single_target_tracker()
-    face_contrast(image_path_5_1, image_path_5_2)
+    face_contrast('test.jpg', image_path_8_2)
+    # model_training(r'E:\training\Data_Collection\\', 'face_datas.xml')
